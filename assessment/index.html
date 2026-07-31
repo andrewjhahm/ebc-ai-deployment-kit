@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EBC AI Readiness Assessment</title>
+<meta name="description" content="A 15-question self-assessment for executive briefing teams deciding where to apply AI first, and where not to.">
+<style>
+:root{
+--navy:#0C1F38; --navy-3:#1D4270;
+--gold:#C9A227; --gold-lt:#E8C860;
+--green:#2E9E86; --green-dk:#1E6F5C;
+--red:#D2664B; --amber:#DFA23A;
+--paper:#F7F5F0; --ink:#12233A; --ink-2:#4A5D75;
+--line:#DEDACF;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:920px;margin:0 auto;padding:32px 22px 72px}
+
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-3) 100%);
+border-radius:16px;padding:30px;color:#fff;
+box-shadow:0 1px 2px rgba(12,31,56,.18),0 14px 34px rgba(12,31,56,.20)}
+.kicker{font-size:11px;letter-spacing:.20em;text-transform:uppercase;color:var(--gold-lt);font-weight:700}
+.hero h1{margin:9px 0 8px;font-size:30px;line-height:1.18;font-weight:700;letter-spacing:-.01em}
+.hero p{margin:0;color:#C3D2E4;font-size:15px;max-width:66ch}
+.hero p + p{margin-top:10px}
+
+.sech{display:flex;align-items:center;gap:14px;margin:38px 0 14px}
+.secn{font-size:11px;letter-spacing:.20em;text-transform:uppercase;font-weight:700;color:var(--gold);white-space:nowrap}
+.sect{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--ink)}
+.rule{flex:1;height:1px;background:var(--line)}
+
+.dim{background:#fff;border:1px solid var(--line);border-radius:13px;padding:20px 22px;margin-bottom:14px;
+box-shadow:0 1px 2px rgba(18,35,58,.05),0 8px 22px rgba(18,35,58,.06)}
+.dim h3{margin:0 0 3px;font-size:17px;font-weight:700;letter-spacing:-.01em}
+.dim .lead{margin:0 0 14px;font-size:13.5px;color:var(--ink-2)}
+
+.q{padding:13px 0;border-top:1px solid var(--line)}
+.q p{margin:0 0 9px;font-size:14.5px}
+.opts{display:flex;flex-wrap:wrap;gap:7px}
+.opt{border:1px solid var(--line);background:#FAF9F6;border-radius:7px;padding:6px 12px;
+font-size:12.5px;cursor:pointer;color:var(--ink-2);transition:all .12s;user-select:none;
+font-family:inherit}
+.opt:hover{border-color:var(--navy-3);color:var(--ink)}
+.opt[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff;font-weight:600}
+
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;align-items:center}
+button.primary{background:var(--navy);color:#fff;border:none;border-radius:9px;
+padding:12px 22px;font-size:14.5px;font-weight:600;cursor:pointer;font-family:inherit}
+button.primary:hover{background:var(--navy-3)}
+button.ghost{background:transparent;color:var(--ink-2);border:1px solid var(--line);
+border-radius:9px;padding:12px 18px;font-size:14px;cursor:pointer;font-family:inherit}
+button.ghost:hover{color:var(--ink);border-color:var(--ink-2)}
+.progress{font-size:13px;color:var(--ink-2)}
+.progress b{color:var(--ink)}
+
+#results{display:none;margin-top:14px}
+.band{border-radius:16px;padding:26px 28px;color:#fff;
+box-shadow:0 1px 2px rgba(12,31,56,.18),0 14px 34px rgba(12,31,56,.20)}
+.band h2{margin:8px 0 8px;font-size:27px;font-weight:700;letter-spacing:-.01em}
+.band p{margin:0;font-size:15px;max-width:70ch;color:rgba(255,255,255,.86)}
+.band .score{font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;
+color:rgba(255,255,255,.7)}
+
+.meter{margin:14px 0}
+.meter .lab{display:flex;justify-content:space-between;font-size:12.5px;
+color:var(--ink-2);font-weight:600;margin-bottom:5px;gap:12px}
+.meter .lab b{color:var(--ink);font-weight:700}
+.bar{height:9px;background:#EDEAE3;border-radius:99px;overflow:hidden}
+.fill{height:100%;border-radius:99px;transition:width .5s ease}
+
+.move{background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold);
+border-radius:13px;padding:18px 20px;margin-bottom:12px;
+box-shadow:0 1px 2px rgba(18,35,58,.05),0 8px 22px rgba(18,35,58,.06)}
+.move .n{font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:800;color:var(--gold)}
+.move h4{margin:5px 0 6px;font-size:16px;font-weight:700}
+.move p{margin:0;font-size:14px;color:var(--ink-2)}
+
+.boundary{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+.bx{background:#fff;border:1px solid var(--line);border-radius:13px;padding:18px 20px;
+box-shadow:0 1px 2px rgba(18,35,58,.05),0 8px 22px rgba(18,35,58,.06)}
+.bx.auto{border-left:4px solid var(--green)}
+.bx.human{border-left:4px solid var(--red)}
+.bx h4{margin:0 0 4px;font-size:15.5px;font-weight:700}
+.bx .sub{margin:0 0 11px;font-size:12px;letter-spacing:.11em;text-transform:uppercase;font-weight:700}
+.bx.auto .sub{color:var(--green-dk)}
+.bx.human .sub{color:#9A3D24}
+.bx ul{margin:0;padding-left:18px}
+.bx li{font-size:14px;color:var(--ink-2);margin-bottom:6px}
+.bx li:last-child{margin-bottom:0}
+
+.note{background:#fff;border:1px solid var(--line);border-left:4px solid var(--navy-3);
+border-radius:13px;padding:18px 20px;margin-top:14px;
+box-shadow:0 1px 2px rgba(18,35,58,.05),0 8px 22px rgba(18,35,58,.06)}
+.note p{margin:0;font-size:14px;color:var(--ink-2)}
+.note p b{color:var(--ink)}
+
+footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
+font-size:13px;color:#8A94A3;text-align:center}
+footer a{color:var(--ink-2)}
+
+@media (max-width:760px){
+.boundary{grid-template-columns:1fr}
+.hero h1{font-size:24px}
+.wrap{padding:20px 15px 56px}
+}
+@media print{
+body{background:#fff}
+.dim,.move,.bx,.note,.hero,.band{box-shadow:none;break-inside:avoid}
+.actions,.opts{display:none}
+*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hero">
+  <div class="kicker">EBC AI Deployment Kit</div>
+  <h1>Executive Briefing AI Readiness Assessment</h1>
+  <p>Fifteen questions, about five minutes. It scores where your briefing program is ready to apply AI, where it is not yet, and what the first three moves should be.</p>
+  <p>It is deliberately unglamorous about this. Most briefing teams fail at AI adoption not because the models are weak but because the inputs are scattered, the work is bespoke every time, and nobody has said out loud who signs off. Those are the things this measures.</p>
+</div>
+
+<div class="sech"><span class="secn">Assessment</span><span class="sect">Answer honestly, not aspirationally</span><span class="rule"></span></div>
+
+<div id="quiz"></div>
+
+<div class="actions">
+  <button class="primary" id="scoreBtn">See results</button>
+  <button class="ghost" id="resetBtn">Reset</button>
+  <span class="progress" id="prog"><b>0</b> of 15 answered</span>
+</div>
+
+<div id="results">
+  <div class="sech"><span class="secn">Result</span><span class="sect">Where you stand</span><span class="rule"></span></div>
+  <div class="band" id="band"></div>
+
+  <div class="sech"><span class="secn">Detail</span><span class="sect">By dimension</span><span class="rule"></span></div>
+  <div id="meters"></div>
+
+  <div class="sech"><span class="secn">Next</span><span class="sect">Your first three moves</span><span class="rule"></span></div>
+  <div id="moves"></div>
+
+  <div class="sech"><span class="secn">Boundary</span><span class="sect">Automate this, not that</span><span class="rule"></span></div>
+  <div class="boundary">
+    <div class="bx auto">
+      <p class="sub">Automate first</p>
+      <h4>The assembly tax</h4>
+      <ul>
+        <li>Account snapshots and recent-signal research</li>
+        <li>Attendee background synthesis from public sources</li>
+        <li>Agenda scaffolding from a known meeting type</li>
+        <li>Post-meeting recap drafting and action extraction</li>
+        <li>Asset lookup across the content library</li>
+      </ul>
+    </div>
+    <div class="bx human">
+      <p class="sub">Keep human</p>
+      <h4>The judgment</h4>
+      <ul>
+        <li>What this specific customer actually needs to hear</li>
+        <li>Which executive takes which part of the room</li>
+        <li>Reading the room and changing course mid-meeting</li>
+        <li>The commitment made on the company's behalf</li>
+        <li>Final sign-off on anything the customer sees</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note">
+    <p><b>The operating principle:</b> standardize the content, customize the conversation. The prep, the capture, and the follow-through are automatable. The room is not. A deployment that gets this backwards produces briefings that are faster and worse, which is the outcome that ends AI programs.</p>
+  </div>
+</div>
+
+<footer>
+  Part of the <a href="../">EBC AI Deployment Kit</a>. Runs entirely in your browser. Nothing is sent anywhere, nothing is stored.<br>
+  Built by <a href="https://andrewhahm.com">Andrew Hahm</a>. MIT licensed, reuse and adapt freely.
+</footer>
+
+</div>
+
+<script>
+const DIMENSIONS = [
+  {
+    key: 'inputs',
+    name: 'Input readiness',
+    lead: 'Whether the information an AI would need is actually reachable and trustworthy today.',
+    questions: [
+      'Account context (opportunity history, prior notes, relationship owner) is in one system and is current enough to rely on.',
+      'Briefing requests arrive through a defined intake, not scattered across email, Slack, and hallway asks.',
+      'Past briefing documents and recaps are stored somewhere searchable rather than in individual drives.'
+    ],
+    low: {
+      title: 'Fix the intake before you touch a model',
+      body: 'An AI briefing step is only as good as what it can read. Start by routing every briefing request through one form and putting the last twelve months of briefs in one searchable place. This is unglamorous and it is the highest-return week you will spend.'
+    }
+  },
+  {
+    key: 'repeat',
+    name: 'Repeatability',
+    lead: 'Whether the work is standardized enough that a machine can learn the shape of it.',
+    questions: [
+      'Briefing documents follow a consistent structure rather than being rebuilt from scratch each time.',
+      'You can name your three or four recurring meeting types and what each one needs.',
+      'A new team member could produce an acceptable first draft from a template without shadowing someone for a month.'
+    ],
+    low: {
+      title: 'Standardize the artifact before you automate it',
+      body: 'If every brief is bespoke, there is no pattern to encode and every output will need heavy rework. Write down the six sections a brief always has and the three meeting types you actually run. Automating a standard beats automating a snowflake.'
+    }
+  },
+  {
+    key: 'gates',
+    name: 'Human gates',
+    lead: 'Whether it is clear who reviews what before anything reaches a customer.',
+    questions: [
+      'There is a named owner who signs off on a briefing document before it goes to the executive team.',
+      'Everyone agrees on which outputs may never go out without human review.',
+      'When something goes wrong in a brief, there is a path to find out why rather than a blame conversation.'
+    ],
+    low: {
+      title: 'Name the sign-off owner in writing',
+      body: 'Ambiguous review is where AI adoption dies quietly. One named person, one explicit list of what can never ship unreviewed. Do this before the pilot, not after the first embarrassing draft reaches an executive.'
+    }
+  },
+  {
+    key: 'measure',
+    name: 'Measurement',
+    lead: 'Whether you would be able to tell if this worked.',
+    questions: [
+      'You know roughly how many hours go into preparing a typical briefing today.',
+      'You have a shared definition of what makes a brief good, beyond "the exec liked it".',
+      'You could compare briefing quality or turnaround before and after a change without starting a new tracking project.'
+    ],
+    low: {
+      title: 'Baseline the hours this week',
+      body: 'You cannot defend an AI investment you never measured. Time three real briefings end to end and write down what "good" means in five bullets. Two hours of work now is what turns a pilot into a renewal conversation later.'
+    }
+  },
+  {
+    key: 'people',
+    name: 'Team and ownership',
+    lead: 'Whether the people doing the work will actually use it, and whether someone owns it.',
+    questions: [
+      'One person would own this in practice, with time protected for it, rather than it being everyone and no one.',
+      'The people who prepare briefings today are curious about AI rather than defensive about it.',
+      'Leadership wants a measured outcome from this, not an announcement.'
+    ],
+    low: {
+      title: 'Find the owner before the tool',
+      body: 'Programs without a named owner become shelfware regardless of how good the tooling is. Identify the one person with both credibility on the team and protected time. If nobody has protected time, that is the finding, and it outranks any tool decision.'
+    }
+  }
+];
+
+const LABELS = ['Not at all', 'Partly', 'Mostly', 'Fully'];
+const answers = {};
+let totalQuestions = 0;
+
+function buildQuiz() {
+  const quiz = document.getElementById('quiz');
+  DIMENSIONS.forEach((dim, di) => {
+    const card = document.createElement('div');
+    card.className = 'dim';
+    const h = document.createElement('h3');
+    h.textContent = dim.name;
+    const lead = document.createElement('p');
+    lead.className = 'lead';
+    lead.textContent = dim.lead;
+    card.appendChild(h);
+    card.appendChild(lead);
+
+    dim.questions.forEach((qt, qi) => {
+      const id = dim.key + '-' + qi;
+      totalQuestions++;
+      const q = document.createElement('div');
+      q.className = 'q';
+      const p = document.createElement('p');
+      p.textContent = qt;
+      const opts = document.createElement('div');
+      opts.className = 'opts';
+      opts.setAttribute('role', 'group');
+      LABELS.forEach((lab, v) => {
+        const b = document.createElement('button');
+        b.className = 'opt';
+        b.type = 'button';
+        b.textContent = lab;
+        b.setAttribute('aria-pressed', 'false');
+        b.addEventListener('click', () => {
+          answers[id] = v;
+          Array.from(opts.children).forEach(c => c.setAttribute('aria-pressed', 'false'));
+          b.setAttribute('aria-pressed', 'true');
+          updateProgress();
+        });
+        opts.appendChild(b);
+      });
+      q.appendChild(p);
+      q.appendChild(opts);
+      card.appendChild(q);
+    });
+    quiz.appendChild(card);
+  });
+}
+
+function updateProgress() {
+  const n = Object.keys(answers).length;
+  document.getElementById('prog').innerHTML = '<b>' + n + '</b> of ' + totalQuestions + ' answered';
+}
+
+function dimScore(dim) {
+  let sum = 0, count = 0;
+  dim.questions.forEach((_, qi) => {
+    const v = answers[dim.key + '-' + qi];
+    if (typeof v === 'number') { sum += v; count++; }
+  });
+  if (!count) return 0;
+  return (sum / count) / 3;
+}
+
+function fillColor(pct) {
+  if (pct >= 0.7) return 'var(--green)';
+  if (pct >= 0.45) return 'var(--gold)';
+  return 'var(--red)';
+}
+
+function band(pct) {
+  if (pct >= 0.78) return {
+    name: 'Ready to scale',
+    bg: 'linear-gradient(135deg,#1E6F5C 0%,#2E9E86 100%)',
+    body: 'Your inputs, your standards, and your review path are in good enough shape that the constraint is now sequencing rather than foundations. Pick the single highest-volume briefing type, automate its research and first draft, and hold the human gate at sign-off. Expand only after you can show the before-and-after on that one workflow.'
+  };
+  if (pct >= 0.55) return {
+    name: 'Ready to pilot',
+    bg: 'linear-gradient(135deg,#0C1F38 0%,#1D4270 100%)',
+    body: 'You have enough structure to run a real pilot, and enough gaps that a full rollout would expose them. Scope the pilot narrowly to one meeting type and one owner, close the weakest dimension below in parallel, and set the success measure before you start rather than after.'
+  };
+  if (pct >= 0.32) return {
+    name: 'Foundation work first',
+    bg: 'linear-gradient(135deg,#96690F 0%,#DFA23A 100%)',
+    body: 'A pilot right now would produce a demo that impresses once and then stalls, because the underlying inputs and standards are not there to support daily use. Spend the next few weeks on the two lowest dimensions below. This is the cheaper path, even though it feels slower.'
+  };
+  return {
+    name: 'Not yet',
+    bg: 'linear-gradient(135deg,#7A2E19 0%,#D2664B 100%)',
+    body: 'The honest read is that AI is not your bottleneck yet. Scattered inputs, bespoke output, and unclear ownership will defeat any tool you deploy on top of them. The good news is that the fixes below are process work you can do without buying anything, and they pay off whether or not you ever add AI.'
+  };
+}
+
+function showResults() {
+  const scores = DIMENSIONS.map(d => ({ dim: d, pct: dimScore(d) }));
+  const overall = scores.reduce((a, s) => a + s.pct, 0) / scores.length;
+
+  const b = band(overall);
+  const bandEl = document.getElementById('band');
+  bandEl.style.background = b.bg;
+  bandEl.innerHTML = '<div class="score">Overall readiness &middot; ' + Math.round(overall * 100) + '%</div>' +
+    '<h2>' + b.name + '</h2><p>' + b.body + '</p>';
+
+  const meters = document.getElementById('meters');
+  meters.innerHTML = '';
+  scores.forEach(s => {
+    const wrap = document.createElement('div');
+    wrap.className = 'meter';
+    wrap.innerHTML = '<div class="lab"><b>' + s.dim.name + '</b><span>' + Math.round(s.pct * 100) + '%</span></div>' +
+      '<div class="bar"><div class="fill" style="width:' + (s.pct * 100) + '%;background:' + fillColor(s.pct) + '"></div></div>';
+    meters.appendChild(wrap);
+  });
+
+  const weakest = scores.slice().sort((a, b2) => a.pct - b2.pct).slice(0, 3);
+  const moves = document.getElementById('moves');
+  moves.innerHTML = '';
+  weakest.forEach((s, i) => {
+    const m = document.createElement('div');
+    m.className = 'move';
+    m.innerHTML = '<div class="n">Move ' + (i + 1) + ' &middot; ' + s.dim.name + '</div>' +
+      '<h4>' + s.dim.low.title + '</h4><p>' + s.dim.low.body + '</p>';
+    moves.appendChild(m);
+  });
+
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+document.getElementById('scoreBtn').addEventListener('click', () => {
+  const n = Object.keys(answers).length;
+  if (n < totalQuestions) {
+    const ok = confirm('You have answered ' + n + ' of ' + totalQuestions + ' questions. Unanswered ones count as "Not at all". Score anyway?');
+    if (!ok) return;
+  }
+  showResults();
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  Object.keys(answers).forEach(k => delete answers[k]);
+  document.querySelectorAll('.opt').forEach(o => o.setAttribute('aria-pressed', 'false'));
+  document.getElementById('results').style.display = 'none';
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+buildQuiz();
+updateProgress();
+</script>
+</body>
+</html>
